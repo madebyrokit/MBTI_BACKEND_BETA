@@ -12,6 +12,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class UpdateCommentRequest {
+    private Long postId;
     private String content;
-    private String selectOption;
+    private String option;
 }

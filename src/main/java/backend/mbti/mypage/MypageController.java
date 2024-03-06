@@ -1,12 +1,11 @@
 package backend.mbti.mypage;
 
-import backend.mbti.dto.mypage.UpdateMemberRequest;
-import backend.mbti.domain.member.Member;
-import backend.mbti.domain.post.Post;
+import backend.mbti.dto.mypage.request.UpdateMemberRequest;
+import backend.mbti.dto.mypage.response.ListPostByMemberResponse;
+import backend.mbti.dto.mypage.response.ViewMemberInfoResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,47 +20,39 @@ public class MypageController {
     private final MypageService mypageService;
 
     @GetMapping
-    public ResponseEntity<Member> viewUserInfo(Authentication authentication) {
-        String username = authentication.getName();
-
-        Member member = mypageService.getUserInfo(username);
-
-        return ResponseEntity.ok(member);
+    public ResponseEntity<ViewMemberInfoResponse> viewUserInfo(Authentication authentication) {
+        return ResponseEntity.ok(mypageService.getUserInfo(authentication.getName()));
     }
 
     @PutMapping
-    public ResponseEntity<Member> updateAllMemberInfo(@RequestBody UpdateMemberRequest request, Authentication authentication) {
-        String username = authentication.getName();
-        Member updatedMember = mypageService.updateAllMemberInfo(request, username);
-
-        if (updatedMember != null) {
-            return ResponseEntity.ok(updatedMember);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-    // 프로필 저장
-
-    @GetMapping("/{userId}")
-    public ResponseEntity<List<Post>> getPostsByMember(@PathVariable String userId, Authentication authentication) {
-        String authUserId = authentication.getName();
-
-        if (!userId.equals(authUserId)) {
-            throw new AccessDeniedException("접속 불가!");
-        }
-
-        List<Post> posts = mypageService.getPostsByMember(userId);
-        return ResponseEntity.ok(posts);
+    public void updateMyProfile(@RequestBody UpdateMemberRequest updateMemberRequest, Authentication authentication) {
+        mypageService.updateMember(updateMemberRequest, authentication.getName());
     }
 
-    // 문의하기
+    @GetMapping("/posts")
+    public ResponseEntity<List<ListPostByMemberResponse>> getPostsByMember(Authentication authentication) {
+        return ResponseEntity.ok(mypageService.getPostsByMember(authentication.getName()));
+    }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteMember(Authentication authentication) {
-        String username = authentication.getName();
-        log.info(username);
-        mypageService.deleteMember(username);
-        log.info("delete");
-        return ResponseEntity.noContent().build();
+    @GetMapping("/comments")
+    public ResponseEntity<Void> listCommentByMember(Authentication authentication) {
+        return ResponseEntity.ok().build();
+    }
+    @GetMapping("/like/post")
+    public ResponseEntity<Void> likePostsByMember(Authentication authentication) {
+        return ResponseEntity.ok().build();
+    }
+    @GetMapping("/like/comment")
+    public ResponseEntity<Void> likeCommentsByMember(Authentication authentication) {
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/report")
+    public ResponseEntity<Void> viewReportByMember(Authentication authentication) {
+        return ResponseEntity.ok().build();
+    }
+    @DeleteMapping
+    public void deleteMember(Authentication authentication) {
+        mypageService.deleteMember(authentication.getName());
     }
 }

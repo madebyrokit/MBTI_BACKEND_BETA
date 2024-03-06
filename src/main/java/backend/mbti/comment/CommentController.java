@@ -3,6 +3,8 @@ package backend.mbti.comment;
 
 import backend.mbti.domain.comment.Comment;
 import backend.mbti.dto.comment.CreateCommentRequest;
+import backend.mbti.dto.comment.DeleteCommentRequest;
+import backend.mbti.dto.comment.LikeCommentRequest;
 import backend.mbti.dto.comment.UpdateCommentRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +23,9 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping("/{postId}")
-    public void createComment(@PathVariable Long postId, @RequestBody CreateCommentRequest createCommentRequest, Authentication authentication) {
-        commentService.createComment(postId, createCommentRequest, authentication.getName());
+    @PostMapping
+    public void createComment(@RequestBody CreateCommentRequest createCommentRequest, Authentication authentication) {
+        commentService.createComment(createCommentRequest, authentication.getName());
     }
 
     @GetMapping("/{postId}")
@@ -32,18 +34,18 @@ public class CommentController {
         return ResponseEntity.ok(comments);
     }
 
-    @PutMapping("/{commentId}")
-    public void updateComment(@PathVariable Long commentId, @RequestBody UpdateCommentRequest updateCommentRequest, Authentication authentication) {
-        commentService.updateComment(commentId, updateCommentRequest, authentication.getName());
+    @PutMapping
+    public void updateComment(@RequestBody UpdateCommentRequest updateCommentRequest, Authentication authentication) {
+        commentService.updateComment(updateCommentRequest, authentication.getName());
     }
 
-    @DeleteMapping("/{commentId}")
-    public void deleteComment(@PathVariable Long commentId, Authentication authentication) {
-        commentService.deleteComment(commentId, authentication.getName());
+    @DeleteMapping
+    public void deleteComment(@RequestBody DeleteCommentRequest deleteCommentRequest, Authentication authentication) {
+        commentService.deleteComment(deleteCommentRequest, authentication.getName());
     }
 
-    @PostMapping("/{commentId}/like")
-    public void toggleLikeComment(@PathVariable Long commentId, Authentication authentication) {
-        commentService.toggleLike(commentId, authentication.getName());
+    @PostMapping("/like")
+    public void toggleLikeComment(LikeCommentRequest likeCommentRequest, Authentication authentication) {
+        commentService.toggleLike(likeCommentRequest.getCommentId(), authentication.getName());
     }
 }

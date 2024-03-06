@@ -28,24 +28,23 @@ public class Comment {
     @Column
     private String content;
 
-    @Column
-    private Integer likeCount;
-
     @ManyToOne
     private Post post;
 
     @ManyToOne
     private Member member;
 
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<LikeComment> likeComment;
+
     @Column
-    private Character selectOption;
+    private String selectOption;
 
     @Column
     private Date createdAt;
 
-    public Comment(String content, Integer likeCount, Post post, Member member, Character selectOption, Date createdAt) {
+    public Comment(String content, Post post, Member member, String selectOption, Date createdAt) {
         this.content = content;
-        this.likeCount = likeCount;
         this.post = post;
         this.member = member;
         this.selectOption = selectOption;

@@ -1,10 +1,14 @@
 package backend.mbti.comment;
 
 import backend.mbti.domain.comment.Comment;
+import backend.mbti.domain.comment.LikeComment;
 import backend.mbti.dto.comment.CreateCommentRequest;
 import backend.mbti.domain.member.Member;
 import backend.mbti.domain.post.Post;
+import backend.mbti.dto.comment.DeleteCommentRequest;
 import backend.mbti.dto.comment.UpdateCommentRequest;
+import backend.mbti.exception.AppException;
+import backend.mbti.exception.ErrorCode;
 import backend.mbti.post.PostRepository;
 import backend.mbti.sign.SignRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,50 +30,44 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
-    public void createComment(Long postId, CreateCommentRequest createCommentRequest, String username) {
+    public void createComment(CreateCommentRequest createCommentRequest, String username) {
         Member member = signRepository.findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException("회원을 찾을 수 없습니다."));
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, "회원을 찾을 수 없습니다."));
 
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("게시물을 찾을 수 없습니다."));
+        Post post = postRepository.findById(createCommentRequest.getPostId())
+                .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND, "게시물을 찾을 수 없습니다."));
 
         Comment comment = new Comment(
                 createCommentRequest.getContent(),
-                0,
                 post,
                 member,
                 createCommentRequest.getOption(),
                 new Date());
+
+        commentRepository.save(comment);
     }
 
     @Override
     public List<Comment> getComments(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("Post not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND, "게시물을 찾을 수 없습니다."));
 
         return commentRepository.findByPost(post);
     }
 
     @Override
-    public void updateComment(Long commentId, UpdateCommentRequest updateCommentRequest, String username) {
-        Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new EntityNotFoundException("Comment not found"));
-
-        if (!comment.getMember().getUsername().equals(username)) {
-            throw new AccessDeniedException("You are not allowed to update this comment");
-        }
+    public void updateComment(UpdateCommentRequest updateCommentRequest, String username) {
+        Comment comment = commentRepository.findById(updateCommentRequest.getPostId())
+                .orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_FOUND, ""));
 
         comment.setContent(updateCommentRequest.getContent());
+        comment.setSelectOption(updateCommentRequest.getOption());
     }
 
     @Override
-    public void deleteComment(Long commentId, String username) {
-        Comment comment = commentRepository.findById(commentId)
+    public void deleteComment(DeleteCommentRequest deleteCommentRequest, String username) {
+        Comment comment = commentRepository.findById(deleteCommentRequest.getCommentId())
                 .orElseThrow(() -> new EntityNotFoundException("Comment not found"));
-
-        if (!comment.getMember().getUsername().equals(username)) {
-            throw new AccessDeniedException("You are not allowed to delete this comment");
-        }
 
         commentRepository.delete(comment);
     }

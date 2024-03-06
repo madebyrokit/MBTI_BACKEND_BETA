@@ -1,8 +1,6 @@
 package backend.mbti.post;
 
-import backend.mbti.dto.post.CreatePostRequest;
-import backend.mbti.dto.post.PostResponse;
-import backend.mbti.dto.post.UpdatePostRequest;
+import backend.mbti.dto.post.*;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,18 +40,18 @@ public class PostController {
         }
     }
 
-    @PutMapping("/{postId}")
-    public void updatePost(@PathVariable Long postId, @RequestBody UpdatePostRequest updatePostRequest, Authentication authentication) {
-        postService.updatePost(postId, updatePostRequest, authentication.getName());
+    @PutMapping
+    public void updatePost(@RequestBody UpdatePostRequest updatePostRequest, Authentication authentication) {
+        postService.updatePost(updatePostRequest, authentication.getName());
     }
 
-    @DeleteMapping("/{postId}")
-    public void deletePost(@PathVariable Long postId, Authentication authentication) {
-        postService.deletePost(postId, authentication.getName());
+    @DeleteMapping
+    public void deletePost(@RequestBody DeletePostRequest deletePostRequest, Authentication authentication) {
+        postService.deletePost(deletePostRequest, authentication.getName());
     }
 
-    @PostMapping("/{postId}/like")
-    public void toggleLike(@PathVariable Long postId, Authentication authentication) {
-        postService.likePost(postId, authentication.getName());
+    @PostMapping("/like")
+    public void toggleLike(LikePostRequest likePostRequest, Authentication authentication) {
+        postService.likePost(likePostRequest, authentication.getName());
     }
 }

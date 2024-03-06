@@ -46,8 +46,8 @@ public class SecurityConfig {
                 .addFilterBefore(new JwtFilter(signService, secretKey), UsernamePasswordAuthenticationFilter.class)
                 .requestMatchers().antMatchers(HttpMethod.POST, "/**")
                 .requestMatchers().antMatchers(HttpMethod.GET, "/**")
-                .requestMatchers().antMatchers(HttpMethod.PUT, "/post/*", "/mypage/update-all", "/comment/*")
-                .requestMatchers().antMatchers(HttpMethod.DELETE, "/post/*", "/mypage/*", "/comment/*");
+                .requestMatchers().antMatchers(HttpMethod.PUT, "/**")
+                .requestMatchers().antMatchers(HttpMethod.DELETE, "/**");
         return httpSecurity.build();
 
     }

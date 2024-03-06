@@ -1,4 +1,4 @@
-package backend.mbti.dto.mypage;
+package backend.mbti.dto.mypage.request;
 
 import lombok.*;
 

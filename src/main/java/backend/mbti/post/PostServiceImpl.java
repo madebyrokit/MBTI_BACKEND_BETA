@@ -2,9 +2,7 @@ package backend.mbti.post;
 
 import backend.mbti.domain.post.LikePost;
 import backend.mbti.domain.post.ViewCountPost;
-import backend.mbti.dto.post.CreatePostRequest;
-import backend.mbti.dto.post.PostResponse;
-import backend.mbti.dto.post.UpdatePostRequest;
+import backend.mbti.dto.post.*;
 
 import backend.mbti.domain.member.Member;
 import backend.mbti.domain.post.Post;
@@ -83,8 +81,8 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public void updatePost(Long postId, UpdatePostRequest updatePostRequest, String username) {
-        Post post = postRepository.findById(postId).orElseThrow(()->
+    public void updatePost(UpdatePostRequest updatePostRequest, String username) {
+        Post post = postRepository.findById(updatePostRequest.getPostId()).orElseThrow(()->
                 new AppException(ErrorCode.POST_NOT_FOUND, "")
         );
         post.setTitle(updatePostRequest.getTitle());
@@ -95,19 +93,20 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public void deletePost(Long postId, String username) {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND, ""));
+    public void deletePost(DeletePostRequest deletePostRequest, String username) {
+        Post post = postRepository.findById(deletePostRequest.getPostId())
+                .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND, ""));
 
         postRepository.delete(post);
     }
 
 
     @Override
-    public void likePost(Long postId, String username) {
+    public void likePost(LikePostRequest likePostRequest, String username) {
         Member member = signRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ""));
 
-        Post post = postRepository.findById(postId)
+        Post post = postRepository.findById(likePostRequest.getPostId())
                 .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND, ""));
 
         LikePost likePost = new LikePost(post, member);

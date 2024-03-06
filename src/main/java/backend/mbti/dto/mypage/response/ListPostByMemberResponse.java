@@ -1,15 +1,15 @@
-package backend.mbti.dto.post;
+package backend.mbti.dto.mypage.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
-public class UpdatePostRequest {
+public class ListPostByMemberResponse {
     private Long postId;
     private String title;
-    private String optionA;
-    private String optionB;
 }
