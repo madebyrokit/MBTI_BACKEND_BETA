@@ -13,5 +13,5 @@ public enum ErrorCode {
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED),
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND);
 
-    private HttpStatus httpStatus;
+    private final HttpStatus httpStatus;
 }
