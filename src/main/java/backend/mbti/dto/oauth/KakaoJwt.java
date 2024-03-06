@@ -3,7 +3,7 @@ package backend.mbti.dto.oauth;
 import lombok.Data;
 
 @Data
-public class OAuthToken {
+public class KakaoJwt {
     private String access_token;
     private String token_type;
     private String refresh_token;

@@ -1,7 +1,7 @@
-package backend.mbti.oauth;
+package backend.mbti.oauth.kakao;
 
 import backend.mbti.dto.oauth.KakaoProfile;
-import backend.mbti.dto.oauth.OAuthToken;
+import backend.mbti.dto.oauth.KakaoJwt;
 import backend.mbti.sign.SignRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,7 +26,6 @@ public class KakaoServiceImpl implements KakaoService {
     private final SignRepository signRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    // JWT
     @Value("${jwt.secret}")
     private String key;
     private Long expireTimeMs = 1000 * 60 * 60L;
@@ -44,8 +43,6 @@ public class KakaoServiceImpl implements KakaoService {
         params.add("redirect_uri", "http://localhost:3000/kakao");
         params.add("code", code);
 
-
-        // HttpHeader + HttpBody
         HttpEntity<MultiValueMap<String, String>> kakaoTokenRequest = new HttpEntity<>(params, headers);
 
         ResponseEntity<String> response = restTemplate.exchange(
@@ -55,26 +52,21 @@ public class KakaoServiceImpl implements KakaoService {
                 String.class
         );
 
-        //객체 저장
         ObjectMapper objectMapper = new ObjectMapper();
-        OAuthToken oAuthToken = null;
+        KakaoJwt kakaoJwt = null;
         try {
-            oAuthToken = objectMapper.readValue(response.getBody(), OAuthToken.class);
+            kakaoJwt = objectMapper.readValue(response.getBody(), KakaoJwt.class);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
         RestTemplate rt2 = new RestTemplate();
 
-        //httpheader 오브젝트 생성
         HttpHeaders headers2 = new HttpHeaders();
-        headers2.add("Authorization", "Bearer " + oAuthToken.getAccess_token());
+        headers2.add("Authorization", "Bearer " + kakaoJwt.getAccess_token());
         headers2.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
-
-        //httpheader와 httpbody를 하나의 오브젝트에 담기
         HttpEntity<MultiValueMap<String, String>> kakaoProfileRequest = new HttpEntity<>(headers2);
 
-        //http 요청
         ResponseEntity<String> response2 = rt2.exchange(
                 "https://kapi.kakao.com/v2/user/me",
                 HttpMethod.POST,
@@ -95,12 +87,8 @@ public class KakaoServiceImpl implements KakaoService {
         }
         log.info(kakaoProfile.getProperties().getNickname());
 
-
-
         return new String("임시");
     }
-
-
-    }
+}
 
 
