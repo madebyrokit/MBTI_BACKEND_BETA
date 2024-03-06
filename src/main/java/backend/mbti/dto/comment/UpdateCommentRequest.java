@@ -12,8 +12,6 @@ import java.util.Date;
 @Getter
 @Setter
 public class UpdateCommentRequest {
-
     private String content;
-
     private String selectOption;
 }

@@ -44,8 +44,8 @@ public class SecurityConfig {
                 .anyRequest().authenticated();
         httpSecurity
                 .addFilterBefore(new JwtFilter(signService, secretKey), UsernamePasswordAuthenticationFilter.class)
-                .requestMatchers().antMatchers(HttpMethod.POST, "/mypage/**", "/mypage","/post")
-                .requestMatchers().antMatchers(HttpMethod.GET, "/mypage", "/mypage/*/posts", "/mypage/**")
+                .requestMatchers().antMatchers(HttpMethod.POST, "/**")
+                .requestMatchers().antMatchers(HttpMethod.GET, "/**")
                 .requestMatchers().antMatchers(HttpMethod.PUT, "/post/*", "/mypage/update-all", "/comment/*")
                 .requestMatchers().antMatchers(HttpMethod.DELETE, "/post/*", "/mypage/*", "/comment/*");
         return httpSecurity.build();

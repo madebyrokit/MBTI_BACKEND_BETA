@@ -1,11 +1,10 @@
 package backend.mbti.post;
 
-
-
 import backend.mbti.domain.post.LikePost;
-import backend.mbti.dto.post.PostCreateRequest;
+import backend.mbti.domain.post.ViewCountPost;
+import backend.mbti.dto.post.CreatePostRequest;
 import backend.mbti.dto.post.PostResponse;
-import backend.mbti.dto.post.PostUpdateRequest;
+import backend.mbti.dto.post.UpdatePostRequest;
 
 import backend.mbti.domain.member.Member;
 import backend.mbti.domain.post.Post;
@@ -30,6 +29,26 @@ public class PostServiceImpl implements PostService{
     private final SignRepository signRepository;
     private final PostRepository postRepository;
     private final LikePostRepository likePostRepository;
+
+    @Override
+    public void createPost(CreatePostRequest createPostRequest, String username) {
+        Member member = signRepository.findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, "USERNAME_NOT_FOUND"));
+
+        ViewCountPost viewCountPost = new ViewCountPost(0L);
+
+        Post post = new Post(
+                createPostRequest.getTitle(),
+                createPostRequest.getOptionA(),
+                createPostRequest.getOptionB(),
+                member,
+                new Date(),
+                viewCountPost
+        );
+        viewCountPost.setPost(post);
+
+        postRepository.save(post);
+    }
 
     @Override
     public List<PostResponse> viewPostList() {
@@ -64,73 +83,35 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Post createPost(PostCreateRequest request, String username) {
-        Member member = signRepository.findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException("유효하지 않는 사용자"));
+    public void updatePost(Long postId, UpdatePostRequest updatePostRequest, String username) {
+        Post post = postRepository.findById(postId).orElseThrow(()->
+                new AppException(ErrorCode.POST_NOT_FOUND, "")
+        );
+        post.setTitle(updatePostRequest.getTitle());
+        post.setOptionA(updatePostRequest.getOptionA());
+        post.setOptionB(updatePostRequest.getOptionB());
 
-        Post post = new Post();
-        post.setMember(member);
-        post.setTitle(request.getTitle());
-        post.setOptionA(request.getOptionA());
-        post.setOptionB(request.getOptionB());
-        post.setCreatedAt(new Date());
-        post.setMember(member);
-
-        return postRepository.save(post);
+        postRepository.save(post);
     }
 
-
-
-
-    // 글 수정
-    @Override
-    public Post updatePost(Long postId, PostUpdateRequest request, String username) {
-        Post post = postRepository.findById(postId).orElse(null);
-        if (post == null) {
-            return null;
-        }
-
-        if (!post.getMember().getUsername().equals(username)) {
-            throw new AccessDeniedException("게시글 수정 접근 불가");
-        }
-
-        post.setTitle(request.getTitle());
-        post.setOptionA(request.getOptionA());
-        post.setOptionB(request.getOptionB());
-
-        return postRepository.save(post);
-    }
-
-    // 글 삭제
     @Override
     public void deletePost(Long postId, String username) {
-        Post post = postRepository.findById(postId).orElse(null);
-        if (post != null && post.getMember().getUsername().equals(username)) {
-            postRepository.delete(post);
-        } else {
-            throw new AccessDeniedException("게시글을 찾지 못했습니다.");
-        }
+        Post post = postRepository.findById(postId).orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND, ""));
+
+        postRepository.delete(post);
     }
 
 
-
-    // 댓글 수
-    public Integer getCommentCount(Long postId) {
-        Optional<Post> optionalPost = postRepository.findById(postId);
-
-return 0;
-    }
-
-    // 글 좋아요 (구현 해야함)
     @Override
-    @Transactional
     public void likePost(Long postId, String username) {
         Member member = signRepository.findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException("회원을 찾을 수 없습니다."));
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ""));
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new EntityNotFoundException("게시물을 찾을 수 없습니다."));
+                .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND, ""));
 
+        LikePost likePost = new LikePost(post, member);
+
+        likePostRepository.save(likePost);
     }
-
 }

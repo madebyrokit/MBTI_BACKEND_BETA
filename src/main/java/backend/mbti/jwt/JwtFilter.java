@@ -29,7 +29,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        log.info("authorization: {}", authorization);
+        log.info("JWT: {}", authorization);
 
         // Token 안보내면 실행
         if (authorization == null || !authorization.startsWith("Bearer ")) {
@@ -51,7 +51,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // userId Token에서 꺼내기
         String username = JwtProvider.getUserName(token, secretKey);
-        log.info("userId:{}", username);
+        log.info("username: {}", username);
 
         // 권한 부여
         UsernamePasswordAuthenticationToken authenticationToken =

@@ -6,15 +6,9 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MemberUpdateRequest {
-
-    private String email;
-
-    private String mbti;
-
+public class UpdateMemberRequest {
     private String username;
-
     private String currentPassword;
-
     private String newPassword;
+    private String mbtitype;
 }

@@ -1,6 +1,6 @@
 package backend.mbti.mypage;
 
-import backend.mbti.dto.mypage.MemberUpdateRequest;
+import backend.mbti.dto.mypage.UpdateMemberRequest;
 import backend.mbti.domain.member.Member;
 import backend.mbti.domain.post.Post;
 import backend.mbti.post.PostRepository;
@@ -39,7 +39,7 @@ public class MypageServiceImpl implements MypageService {
 
     // 회원 정보 수정
     @Override
-    public Member updateAllMemberInfo(MemberUpdateRequest request, String username) {
+    public Member updateAllMemberInfo(UpdateMemberRequest request, String username) {
         Member member = signRepository.findByUsername(username)
                 .orElseThrow(() -> new EntityNotFoundException("회원을 찾을 수 없습니다."));
 

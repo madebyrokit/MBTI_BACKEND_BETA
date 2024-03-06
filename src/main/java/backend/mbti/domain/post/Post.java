@@ -41,4 +41,13 @@ public class Post {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> commentList;
+
+    public Post(String title, String optionA, String optionB, Member member, Date createdAt, ViewCountPost viewCountPost) {
+        this.title = title;
+        this.optionA = optionA;
+        this.optionB = optionB;
+        this.member = member;
+        this.createdAt = createdAt;
+        this.viewCountPost = viewCountPost;
+    }
 }

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class PostUpdateRequest {
+public class UpdatePostRequest {
     private String title;
     private String optionA;
     private String optionB;

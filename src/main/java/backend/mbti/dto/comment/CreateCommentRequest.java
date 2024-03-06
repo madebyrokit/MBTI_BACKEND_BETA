@@ -5,9 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CommentRequest {
-
+public class CreateCommentRequest {
     private String content;
-
-    private Character selectOption;
+    private Character option;
 }

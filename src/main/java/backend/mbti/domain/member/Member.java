@@ -1,7 +1,7 @@
 package backend.mbti.domain.member;
 
 import backend.mbti.domain.comment.Comment;
-import backend.mbti.domain.comment.CommentLike;
+import backend.mbti.domain.comment.LikeComment;
 import backend.mbti.domain.post.LikePost;
 import backend.mbti.domain.post.Post;
 import lombok.*;
@@ -46,7 +46,7 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Comment> commentList;
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<CommentLike> commentLikeList;
+    private List<LikeComment> likeCommentList;
 
     public Member(String email, String password, String username, String mbtitype, String oAuth) {
         this.email = email;

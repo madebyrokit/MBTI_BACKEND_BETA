@@ -1,11 +1,8 @@
 package backend.mbti.post;
 
-
-
-import backend.mbti.dto.post.PostCreateRequest;
+import backend.mbti.dto.post.CreatePostRequest;
 import backend.mbti.dto.post.PostResponse;
-import backend.mbti.dto.post.PostUpdateRequest;
-import backend.mbti.domain.post.Post;
+import backend.mbti.dto.post.UpdatePostRequest;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,12 +22,9 @@ public class PostController {
 
     private final PostService postService;
 
-
     @PostMapping
-    public ResponseEntity<Post> createPost(@RequestBody PostCreateRequest request, Authentication authentication) {
-        String username = authentication.getName();
-        Post createdPost = postService.createPost(request, username);
-        return ResponseEntity.ok(createdPost);
+    public void createPost(@RequestBody CreatePostRequest createPostRequest, Authentication authentication) {
+        postService.createPost(createPostRequest, authentication.getName());
     }
 
     @GetMapping
@@ -49,27 +43,17 @@ public class PostController {
     }
 
     @PutMapping("/{postId}")
-    public ResponseEntity<Post> updatePost(@PathVariable Long postId, @RequestBody PostUpdateRequest request, Authentication authentication) {
-        String username = authentication.getName();
-        Post updatedPost = postService.updatePost(postId, request, username);
-        if (updatedPost != null) {
-            return ResponseEntity.ok(updatedPost);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public void updatePost(@PathVariable Long postId, @RequestBody UpdatePostRequest updatePostRequest, Authentication authentication) {
+        postService.updatePost(postId, updatePostRequest, authentication.getName());
     }
 
     @DeleteMapping("/{postId}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long postId, Authentication authentication) {
-        String username = authentication.getName();
-        postService.deletePost(postId, username);
-        return ResponseEntity.noContent().build();
+    public void deletePost(@PathVariable Long postId, Authentication authentication) {
+        postService.deletePost(postId, authentication.getName());
     }
 
     @PostMapping("/{postId}/like")
-    public ResponseEntity<String> toggleLike(@PathVariable Long postId, Authentication authentication) {
-        String username = authentication.getName();
-        postService.likePost(postId, username);
-        return ResponseEntity.ok("요청 완료");
+    public void toggleLike(@PathVariable Long postId, Authentication authentication) {
+        postService.likePost(postId, authentication.getName());
     }
 }

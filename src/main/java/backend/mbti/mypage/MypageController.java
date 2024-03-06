@@ -1,6 +1,6 @@
 package backend.mbti.mypage;
 
-import backend.mbti.dto.mypage.MemberUpdateRequest;
+import backend.mbti.dto.mypage.UpdateMemberRequest;
 import backend.mbti.domain.member.Member;
 import backend.mbti.domain.post.Post;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class MypageController {
     }
 
     @PutMapping
-    public ResponseEntity<Member> updateAllMemberInfo(@RequestBody MemberUpdateRequest request, Authentication authentication) {
+    public ResponseEntity<Member> updateAllMemberInfo(@RequestBody UpdateMemberRequest request, Authentication authentication) {
         String username = authentication.getName();
         Member updatedMember = mypageService.updateAllMemberInfo(request, username);
 

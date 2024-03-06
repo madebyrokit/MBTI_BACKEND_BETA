@@ -1,12 +1,7 @@
 package backend.mbti.domain.comment;
 
-import backend.mbti.domain.comment.Comment;
 import backend.mbti.domain.member.Member;
-import backend.mbti.domain.post.Post;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -15,7 +10,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentLike {
+public class LikeComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,7 +21,7 @@ public class CommentLike {
     @ManyToOne
     private Member member;
 
-    public CommentLike(Comment comment, Member member) {
+    public LikeComment(Comment comment, Member member) {
         this.comment = comment;
         this.member = member;
     }

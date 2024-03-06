@@ -23,4 +23,9 @@ public class LikePost {
 
     @ManyToOne
     private Member member;
+
+    public LikePost(Post post, Member member) {
+        this.post = post;
+        this.member = member;
+    }
 }

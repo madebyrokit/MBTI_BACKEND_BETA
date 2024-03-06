@@ -2,11 +2,10 @@ package backend.mbti.comment;
 
 
 import backend.mbti.domain.comment.Comment;
-import backend.mbti.dto.comment.CommentRequest;
+import backend.mbti.dto.comment.CreateCommentRequest;
 import backend.mbti.dto.comment.UpdateCommentRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -23,44 +22,28 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/{postId}")
-    public ResponseEntity<Comment> createComment(@PathVariable Long postId,
-                                                 @RequestBody CommentRequest commentRequest,
-                                                 Authentication authentication) {
-        String username = authentication.getName();
-        Comment comment = commentService.createComment(postId, commentRequest, username);
-        return ResponseEntity.status(HttpStatus.CREATED).body(comment);
+    public void createComment(@PathVariable Long postId, @RequestBody CreateCommentRequest createCommentRequest, Authentication authentication) {
+        commentService.createComment(postId, createCommentRequest, authentication.getName());
     }
 
     @GetMapping("/{postId}")
     public ResponseEntity<List<Comment>> viewCommentList(@PathVariable Long postId) {
-        List<Comment> comments = commentService.getCommentsForPost(postId);
+        List<Comment> comments = commentService.getComments(postId);
         return ResponseEntity.ok(comments);
     }
 
     @PutMapping("/{commentId}")
-    public ResponseEntity<Comment> updateComment(@PathVariable Long commentId, @RequestBody UpdateCommentRequest updateCommentRequest, Authentication authentication) {
-        String username = authentication.getName();
-        Comment updatedComment = commentService.updateComment(commentId, updateCommentRequest, username);
-
-        if (updatedComment != null) {
-            return ResponseEntity.ok(updatedComment);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public void updateComment(@PathVariable Long commentId, @RequestBody UpdateCommentRequest updateCommentRequest, Authentication authentication) {
+        commentService.updateComment(commentId, updateCommentRequest, authentication.getName());
     }
 
     @DeleteMapping("/{commentId}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long commentId, Authentication authentication) {
-        String username = authentication.getName();
-        commentService.deleteComment(commentId, username);
-        return ResponseEntity.noContent().build();
+    public void deleteComment(@PathVariable Long commentId, Authentication authentication) {
+        commentService.deleteComment(commentId, authentication.getName());
     }
 
     @PostMapping("/{commentId}/like")
-    public ResponseEntity<Integer> toggleLikeComment(@PathVariable Long commentId, Authentication authentication) {
-        String username = authentication.getName();
-        int updatedLikes = commentService.likePost(commentId, username);
-
-        return ResponseEntity.ok().body(updatedLikes);
+    public void toggleLikeComment(@PathVariable Long commentId, Authentication authentication) {
+        commentService.toggleLike(commentId, authentication.getName());
     }
 }
