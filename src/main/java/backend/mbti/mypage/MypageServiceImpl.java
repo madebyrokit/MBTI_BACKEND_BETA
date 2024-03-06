@@ -47,10 +47,10 @@ public class MypageServiceImpl implements MypageService {
     @Override
     public void updateMember(UpdateMemberRequest updateMemberRequest, String username) {
         Member member = signRepository.findByUsername(username)
-                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, "회원을 찾을 수 없습니다."));
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND));
 
         if (!bCryptPasswordEncoder.matches(updateMemberRequest.getCurrentPassword(), member.getPassword())) {
-            new AppException(ErrorCode.INVALID_PASSWORD, "");
+            new AppException(ErrorCode.INVALID_PASSWORD);
         } else {
             member.setPassword(updateMemberRequest.getNewPassword());
             member.setUsername(updateMemberRequest.getUsername());
@@ -61,7 +61,7 @@ public class MypageServiceImpl implements MypageService {
     @Override
     public List<ListPostByMemberResponse> getPostsByMember(String username) {
         Member member = signRepository.findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException("회원을 찾을 수 없습니다."));
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND));
         List<Post> postList = postRepository.findByMemberOrderByCreatedAtDesc(member);
         List<ListPostByMemberResponse> listPostByMemberResponses = new ArrayList<>();
 
@@ -75,7 +75,7 @@ public class MypageServiceImpl implements MypageService {
     @Override
     public void deleteMember(String username) {
         Member member = signRepository.findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException("회원을 찾을 수 없습니다."));
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND));
 
         signRepository.delete(member);
     }

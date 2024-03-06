@@ -9,5 +9,4 @@ import lombok.NoArgsConstructor;
 @Getter
 public class AppException extends RuntimeException{
     private ErrorCode errorCode;
-    private String message;
 }

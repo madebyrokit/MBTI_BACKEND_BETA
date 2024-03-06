@@ -11,10 +11,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RequiredArgsConstructor
-@Controller
+@RestController
 @CrossOrigin(origins = "http://localhost:3000", exposedHeaders = "Authorization")
 public class SignController {
     private final SignService signService;
@@ -30,8 +31,7 @@ public class SignController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> sign(@RequestBody SignUpRequest signUpRequest) {
-        String signup = signService.signup(signUpRequest);
-        return ResponseEntity.status(HttpStatus.OK).body("username: " + signup);
+    public void sign(@RequestBody SignUpRequest signUpRequest) {
+        signService.signup(signUpRequest);
     }
 }

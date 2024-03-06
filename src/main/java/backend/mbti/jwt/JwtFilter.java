@@ -26,38 +26,36 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         log.info("JWT: {}", authorization);
 
-        // Token 안보내면 실행
         if (authorization == null || !authorization.startsWith("Bearer ")) {
 
-            log.error("Thers is no authorization");
+            log.error("토큰 에러");
+
             filterChain.doFilter(request, response);
             return;
         }
-
 
         String token = authorization.split(" ")[1];
 
-        // Token Expired
         if (JwtProvider.isExpired(token, secretKey)) {
-            log.error("Token is expired");
+            log.error("토큰 만료");
             filterChain.doFilter(request, response);
             return;
         }
 
-        // userId Token에서 꺼내기
         String username = JwtProvider.getUserName(token, secretKey);
         log.info("username: {}", username);
 
-        // 권한 부여
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(username, null, List.of(new SimpleGrantedAuthority("USER")));
+                new UsernamePasswordAuthenticationToken(
+                        username,
+                        null,
+                        List.of(new SimpleGrantedAuthority("USER"))
+                );
 
-        // Detail
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         filterChain.doFilter(request, response);

@@ -21,15 +21,14 @@ public class JwtProvider {
     }
 
     public static String createToken(String username, String key, long expireTimeMs) {
-        Claims claims = Jwts.claims(); // Token info
+        Claims claims = Jwts.claims();
         claims.put("username", username);
 
         return Jwts.builder()
                 .setClaims(claims)
-                .setIssuedAt(new Date(System.currentTimeMillis())) // 발급 날짜, 현재 시간 기준
-                .setExpiration(new Date(System.currentTimeMillis() + expireTimeMs)) // 만료 날짜
-                .signWith(SignatureAlgorithm.HS256, key) // 서명 같은 것, 위조 구분 시 사용
-                .compact()
-                ;
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expireTimeMs))
+                .signWith(SignatureAlgorithm.HS256, key)
+                .compact();
     }
 }

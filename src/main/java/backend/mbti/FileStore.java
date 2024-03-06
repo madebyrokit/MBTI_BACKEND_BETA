@@ -1,6 +1,8 @@
 package backend.mbti;
 
 import backend.mbti.domain.member.Member;
+import backend.mbti.exception.AppException;
+import backend.mbti.exception.ErrorCode;
 import backend.mbti.sign.SignRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +17,6 @@ import static org.apache.commons.io.FilenameUtils.getFullPath;
 
 @AllArgsConstructor
 public class FileStore {
-
     private final SignRepository signRepository;
 
     @Value("${file.upload-dir}")
@@ -26,7 +27,7 @@ public class FileStore {
 
     public void upload(String username, MultipartFile multipartFile) throws IOException {
         Member member = signRepository.findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException("Member not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND));
 
         String fileName = storeFile(multipartFile);
         member.getProfileImage().setOriginalFileName(multipartFile.getName());
@@ -35,7 +36,6 @@ public class FileStore {
     }
 
     public String storeFile(MultipartFile multipartFile) throws IOException {
-
         String originalFilename = multipartFile.getOriginalFilename();
         String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
         String storeFileName = UUID.randomUUID() + fileExtension;

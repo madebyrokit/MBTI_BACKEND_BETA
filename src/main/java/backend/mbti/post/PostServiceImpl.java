@@ -11,11 +11,8 @@ import backend.mbti.exception.ErrorCode;
 import backend.mbti.sign.SignRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,7 +28,7 @@ public class PostServiceImpl implements PostService{
     @Override
     public void createPost(CreatePostRequest createPostRequest, String username) {
         Member member = signRepository.findByUsername(username)
-                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, "USERNAME_NOT_FOUND"));
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND));
 
         ViewCountPost viewCountPost = new ViewCountPost(0L);
 
@@ -67,7 +64,7 @@ public class PostServiceImpl implements PostService{
     @Override
     public PostResponse viewPost(Long postId) {
         Optional<Post> post = Optional.ofNullable(postRepository.findById(postId).orElseThrow(
-                () -> new AppException(ErrorCode.POST_NOT_FOUND, "게시글을 찾지 못했습니다.")
+                () -> new AppException(ErrorCode.POST_NOT_FOUND)
         ));
 
 
@@ -83,7 +80,7 @@ public class PostServiceImpl implements PostService{
     @Override
     public void updatePost(UpdatePostRequest updatePostRequest, String username) {
         Post post = postRepository.findById(updatePostRequest.getPostId()).orElseThrow(()->
-                new AppException(ErrorCode.POST_NOT_FOUND, "")
+                new AppException(ErrorCode.POST_NOT_FOUND)
         );
         post.setTitle(updatePostRequest.getTitle());
         post.setOptionA(updatePostRequest.getOptionA());
@@ -95,19 +92,18 @@ public class PostServiceImpl implements PostService{
     @Override
     public void deletePost(DeletePostRequest deletePostRequest, String username) {
         Post post = postRepository.findById(deletePostRequest.getPostId())
-                .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND, ""));
+                .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND));
 
         postRepository.delete(post);
     }
 
-
     @Override
     public void likePost(LikePostRequest likePostRequest, String username) {
         Member member = signRepository.findByUsername(username)
-                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, ""));
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND));
 
         Post post = postRepository.findById(likePostRequest.getPostId())
-                .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND, ""));
+                .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND));
 
         LikePost likePost = new LikePost(post, member);
 

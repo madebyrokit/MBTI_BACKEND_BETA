@@ -1,7 +1,6 @@
 package backend.mbti.comment;
 
 import backend.mbti.domain.comment.Comment;
-import backend.mbti.domain.comment.LikeComment;
 import backend.mbti.dto.comment.CreateCommentRequest;
 import backend.mbti.domain.member.Member;
 import backend.mbti.domain.post.Post;
@@ -12,7 +11,6 @@ import backend.mbti.exception.ErrorCode;
 import backend.mbti.post.PostRepository;
 import backend.mbti.sign.SignRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -32,10 +30,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void createComment(CreateCommentRequest createCommentRequest, String username) {
         Member member = signRepository.findByUsername(username)
-                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND, "회원을 찾을 수 없습니다."));
+                .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND));
 
         Post post = postRepository.findById(createCommentRequest.getPostId())
-                .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND, "게시물을 찾을 수 없습니다."));
+                .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND));
 
         Comment comment = new Comment(
                 createCommentRequest.getContent(),
@@ -50,7 +48,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<Comment> getComments(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND, "게시물을 찾을 수 없습니다."));
+                .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND));
 
         return commentRepository.findByPost(post);
     }
@@ -58,7 +56,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void updateComment(UpdateCommentRequest updateCommentRequest, String username) {
         Comment comment = commentRepository.findById(updateCommentRequest.getPostId())
-                .orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_FOUND, ""));
+                .orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_FOUND));
 
         comment.setContent(updateCommentRequest.getContent());
         comment.setSelectOption(updateCommentRequest.getOption());
@@ -67,7 +65,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void deleteComment(DeleteCommentRequest deleteCommentRequest, String username) {
         Comment comment = commentRepository.findById(deleteCommentRequest.getCommentId())
-                .orElseThrow(() -> new EntityNotFoundException("Comment not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_FOUND));
 
         commentRepository.delete(comment);
     }
