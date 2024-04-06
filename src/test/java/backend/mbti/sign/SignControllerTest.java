@@ -3,13 +3,14 @@ package backend.mbti.sign;
 import backend.mbti.domain.member.Member;
 import backend.mbti.domain.member.ProfileImage;
 import backend.mbti.dto.sign.SignUpRequest;
+import backend.mbti.repository.SignRepository;
+import backend.mbti.service.SignServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

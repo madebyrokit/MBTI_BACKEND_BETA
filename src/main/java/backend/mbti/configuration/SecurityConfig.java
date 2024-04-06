@@ -1,7 +1,7 @@
 package backend.mbti.configuration;
 
-import backend.mbti.jwt.JwtFilter;
-import backend.mbti.sign.SignService;
+import backend.mbti.configuration.jwt.JwtFilter;
+import backend.mbti.service.SignService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
