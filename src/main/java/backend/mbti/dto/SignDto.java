@@ -4,12 +4,12 @@ import lombok.*;
 
 public class SignDto {
     @Data
-    static class LoginRequest {
+    private static class LoginRequest {
         private String email;
         private String password;
     }
     @Data
-    static class SignUpRequest {
+    public static class SignUpRequest {
         private String email;
         private String password;
         private String username;
@@ -17,7 +17,7 @@ public class SignDto {
     }
 
     @Data
-    static class JwtResponse {
+    public static class JwtResponse {
         private String token;
     }
 }

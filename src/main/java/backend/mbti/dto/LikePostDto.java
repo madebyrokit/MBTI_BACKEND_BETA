@@ -4,7 +4,7 @@ import lombok.Data;
 
 public class LikePostDto {
     @Data
-    static class LikeRequest {
+    public static class LikeRequest {
         private Long postId;
         private Long memberId;
     }

@@ -9,7 +9,7 @@ public class KakaoDto {
     private Properties properties;
     private KakaoAccount kakao_account;
     @Data
-    static class KakaoJwt {
+    public static class KakaoJwt {
         private String access_token;
         private String token_type;
         private String refresh_token;

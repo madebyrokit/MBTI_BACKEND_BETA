@@ -2,7 +2,6 @@ package backend.mbti.service;
 
 
 import backend.mbti.dto.PostDto;
-import backend.mbti.dto.post.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

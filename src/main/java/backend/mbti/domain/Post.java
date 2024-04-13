@@ -33,8 +33,12 @@ public class Post {
     @Column
     private Date createdAt;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private ViewCountPost viewCountPost;
+    @Column
+    private Long view;
+
+    public void incrementView() {
+        this.view++;
+    }
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<LikePost> likePost;

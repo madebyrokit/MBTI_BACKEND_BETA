@@ -5,7 +5,7 @@ import lombok.*;
 
 public class MyPageDto {
     @Data
-    static class Member {
+    public static class Member {
         private Long id;
         private String email;
         private String password;
@@ -15,14 +15,14 @@ public class MyPageDto {
         private String oAuth;
     }
     @Data
-    static class UpdateMember {
+    public static class UpdateMember {
         private String username;
         private String currentPassword;
         private String newPassword;
         private String mbtitype;
     }
     @Data
-    static class ListPostResponse {
+    public static class ListPostResponse {
         private Long postId;
         private String title;
     }

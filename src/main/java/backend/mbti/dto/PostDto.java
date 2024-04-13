@@ -1,7 +1,6 @@
 package backend.mbti.dto;
 
 import lombok.*;
-import net.bytebuddy.jar.asm.commons.Remapper;
 
 import java.util.Date;
 

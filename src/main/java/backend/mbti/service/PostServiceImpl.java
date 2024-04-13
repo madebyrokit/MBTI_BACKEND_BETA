@@ -1,7 +1,6 @@
 package backend.mbti.service;
 
 import backend.mbti.domain.LikePost;
-import backend.mbti.domain.ViewCountPost;
 import backend.mbti.dto.PostDto;
 import backend.mbti.dto.post.*;
 
@@ -17,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
