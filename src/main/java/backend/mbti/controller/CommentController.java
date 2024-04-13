@@ -2,11 +2,9 @@ package backend.mbti.controller;
 
 
 import backend.mbti.service.CommentService;
-import backend.mbti.domain.comment.Comment;
+import backend.mbti.domain.Comment;
 import backend.mbti.dto.comment.CreateCommentRequest;
-import backend.mbti.dto.comment.DeleteCommentRequest;
 import backend.mbti.dto.comment.LikeCommentRequest;
-import backend.mbti.dto.comment.UpdateCommentRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -32,12 +30,21 @@ public class CommentController {
     @GetMapping("/{postId}")
     public ResponseEntity<List<Comment>> viewCommentList(@PathVariable Long postId) {
         List<Comment> comments = commentService.getComments(postId);
-        return ResponseEntity.ok(comments);
+        if (comments != null) {
+            return ResponseEntity.ok(comments);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping
-    public void updateComment(@RequestBody UpdateCommentRequest updateCommentRequest, Authentication authentication) {
-        commentService.updateComment(updateCommentRequest, authentication.getName());
+    public ResponseEntity<?> updateComment(@RequestBody UpdateCommentRequest updateCommentRequest, Authentication authentication) {
+        Boolean comments = commentService.updateComment(updateCommentRequest, authentication.getName());
+        if (comments != null) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping

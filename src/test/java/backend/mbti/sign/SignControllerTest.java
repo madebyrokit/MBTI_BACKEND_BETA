@@ -1,8 +1,7 @@
 package backend.mbti.sign;
 
-import backend.mbti.domain.member.Member;
-import backend.mbti.domain.member.ProfileImage;
-import backend.mbti.dto.sign.SignUpRequest;
+import backend.mbti.domain.Member;
+import backend.mbti.domain.ProfileImage;
 import backend.mbti.repository.SignRepository;
 import backend.mbti.service.SignServiceImpl;
 import org.junit.jupiter.api.Test;

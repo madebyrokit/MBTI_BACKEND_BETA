@@ -1,5 +1,6 @@
 package backend.mbti.controller;
 
+import backend.mbti.dto.PostDto;
 import backend.mbti.dto.post.*;
 
 import backend.mbti.service.PostService;
@@ -22,18 +23,18 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public void createPost(@RequestBody CreatePostRequest createPostRequest, Authentication authentication) {
-        postService.createPost(createPostRequest, authentication.getName());
+    public void createPost(@RequestBody PostDto.CreateRequest createRequest, Authentication authentication) {
+        postService.createPost(createRequest, authentication.getName());
     }
 
     @GetMapping
-    public ResponseEntity<List<PostResponse>> viewPostList() {
-        return ResponseEntity.ok().body(postService.viewPostList());
+    public ResponseEntity<List<PostDto.ListResponse>> viewPostList() {
+        return ResponseEntity.ok().body(postService.getListByPost());
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<PostResponse> viewPost(@PathVariable Long postId) {
-        PostResponse postResponse = postService.viewPost(postId);
+    public ResponseEntity<PostDto.> viewPost(@PathVariable Long postId) {
+        PostResponse postResponse = postService.getPost(postId);
         if (postResponse != null) {
             return ResponseEntity.ok(postResponse);
         } else {

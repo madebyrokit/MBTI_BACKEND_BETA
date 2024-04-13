@@ -1,10 +1,11 @@
-package backend.mbti.configuration;
+package backend.mbti.service;
 
-import backend.mbti.domain.member.Member;
+import backend.mbti.domain.Member;
 import backend.mbti.configuration.exception.AppException;
 import backend.mbti.configuration.exception.ErrorCode;
 import backend.mbti.repository.SignRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,8 +13,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
-@AllArgsConstructor
-public class FileStore {
+@RequiredArgsConstructor
+public class FileServiceImpl implements FileService{
     private final SignRepository signRepository;
 
     @Value("${file.upload-dir}")
@@ -22,7 +23,8 @@ public class FileStore {
         return filePath + filename;
     }
 
-    public void upload(String username, MultipartFile multipartFile) throws IOException {
+    @Override
+    public void upload(String username, MultipartFile multipartFile) {
         Member member = signRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND));
 
@@ -32,12 +34,17 @@ public class FileStore {
         signRepository.save(member);
     }
 
-    public String storeFile(MultipartFile multipartFile) throws IOException {
+    @Override
+    public String storeFile(MultipartFile multipartFile) {
         String originalFilename = multipartFile.getOriginalFilename();
         String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
         String storeFileName = UUID.randomUUID() + fileExtension;
 
-        multipartFile.transferTo(new File(getFullPath(storeFileName)));
+        try {
+            multipartFile.transferTo(new File(getFullPath(storeFileName)));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         return storeFileName;
     }

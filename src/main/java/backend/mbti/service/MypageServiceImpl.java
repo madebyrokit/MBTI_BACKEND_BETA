@@ -1,8 +1,8 @@
 package backend.mbti.service;
 
-import backend.mbti.domain.post.Post;
+import backend.mbti.domain.Post;
 import backend.mbti.dto.mypage.request.UpdateMemberRequest;
-import backend.mbti.domain.member.Member;
+import backend.mbti.domain.Member;
 import backend.mbti.dto.mypage.response.ListPostByMemberResponse;
 import backend.mbti.dto.mypage.response.ViewMemberInfoResponse;
 import backend.mbti.configuration.exception.AppException;

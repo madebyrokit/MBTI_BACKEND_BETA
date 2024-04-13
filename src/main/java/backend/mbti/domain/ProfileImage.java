@@ -1,4 +1,4 @@
-package backend.mbti.domain.member;
+package backend.mbti.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

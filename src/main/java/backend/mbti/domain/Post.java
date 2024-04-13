@@ -1,7 +1,6 @@
-package backend.mbti.domain.post;
+package backend.mbti.domain;
 
-import backend.mbti.domain.comment.Comment;
-import backend.mbti.domain.member.Member;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Getter
 @Setter
@@ -33,21 +33,12 @@ public class Post {
     @Column
     private Date createdAt;
 
-    @OneToOne(cascade = CascadeType.ALL) // 조회수
+    @OneToOne(cascade = CascadeType.ALL)
     private ViewCountPost viewCountPost;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL) // 좋아요
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<LikePost> likePost;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     private List<Comment> commentList;
-
-    public Post(String title, String optionA, String optionB, Member member, Date createdAt, ViewCountPost viewCountPost) {
-        this.title = title;
-        this.optionA = optionA;
-        this.optionB = optionB;
-        this.member = member;
-        this.createdAt = createdAt;
-        this.viewCountPost = viewCountPost;
-    }
 }

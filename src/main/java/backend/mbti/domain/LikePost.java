@@ -1,6 +1,5 @@
-package backend.mbti.domain.post;
+package backend.mbti.domain;
 
-import backend.mbti.domain.member.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

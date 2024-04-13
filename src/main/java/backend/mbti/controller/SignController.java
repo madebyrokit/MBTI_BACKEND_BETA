@@ -1,7 +1,5 @@
 package backend.mbti.controller;
 
-import backend.mbti.dto.sign.LoginRequest;
-import backend.mbti.dto.sign.SignUpRequest;
 import backend.mbti.service.SignService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

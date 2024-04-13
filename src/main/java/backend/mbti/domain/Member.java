@@ -1,9 +1,5 @@
-package backend.mbti.domain.member;
+package backend.mbti.domain;
 
-import backend.mbti.domain.comment.Comment;
-import backend.mbti.domain.comment.LikeComment;
-import backend.mbti.domain.post.LikePost;
-import backend.mbti.domain.post.Post;
 import lombok.*;
 
 import javax.persistence.*;

@@ -1,10 +1,8 @@
 package backend.mbti.service;
 
 import backend.mbti.configuration.jwt.JwtProvider;
-import backend.mbti.domain.member.ProfileImage;
-import backend.mbti.dto.sign.LoginRequest;
-import backend.mbti.dto.sign.SignUpRequest;
-import backend.mbti.domain.member.Member;
+import backend.mbti.domain.ProfileImage;
+import backend.mbti.domain.Member;
 import backend.mbti.configuration.exception.AppException;
 import backend.mbti.configuration.exception.ErrorCode;
 import backend.mbti.repository.SignRepository;

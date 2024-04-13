@@ -1,4 +1,4 @@
-package backend.mbti.domain.post;
+package backend.mbti.domain;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +17,7 @@ public class ViewCountPost {
     private Long id;
 
     @Column
-    private Long view;
+    private Long view = 0L;
 
     @OneToOne
     private Post post;

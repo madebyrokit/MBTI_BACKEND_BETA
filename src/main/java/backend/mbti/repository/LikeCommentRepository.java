@@ -1,6 +1,6 @@
 package backend.mbti.repository;
 
-import backend.mbti.domain.comment.LikeComment;
+import backend.mbti.domain.LikeComment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

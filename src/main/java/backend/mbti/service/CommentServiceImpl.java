@@ -2,12 +2,10 @@ package backend.mbti.service;
 
 import backend.mbti.repository.CommentRepository;
 import backend.mbti.repository.LikeCommentRepository;
-import backend.mbti.domain.comment.Comment;
+import backend.mbti.domain.Comment;
 import backend.mbti.dto.comment.CreateCommentRequest;
-import backend.mbti.domain.member.Member;
-import backend.mbti.domain.post.Post;
-import backend.mbti.dto.comment.DeleteCommentRequest;
-import backend.mbti.dto.comment.UpdateCommentRequest;
+import backend.mbti.domain.Member;
+import backend.mbti.domain.Post;
 import backend.mbti.configuration.exception.AppException;
 import backend.mbti.configuration.exception.ErrorCode;
 import backend.mbti.repository.PostRepository;
@@ -55,12 +53,15 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void updateComment(UpdateCommentRequest updateCommentRequest, String username) {
+    public Boolean updateComment(UpdateCommentRequest updateCommentRequest, String username) {
         Comment comment = commentRepository.findById(updateCommentRequest.getPostId())
                 .orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_FOUND));
 
         comment.setContent(updateCommentRequest.getContent());
         comment.setSelectOption(updateCommentRequest.getOption());
+
+        //X
+        return true;
     }
 
     @Override

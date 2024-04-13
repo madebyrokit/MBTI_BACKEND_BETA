@@ -1,7 +1,6 @@
 package backend.mbti.service;
 
 import backend.mbti.dto.mypage.request.UpdateMemberRequest;
-import backend.mbti.domain.post.Post;
 import backend.mbti.dto.mypage.response.ListPostByMemberResponse;
 import backend.mbti.dto.mypage.response.ViewMemberInfoResponse;
 

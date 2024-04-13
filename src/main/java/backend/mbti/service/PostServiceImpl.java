@@ -1,13 +1,15 @@
 package backend.mbti.service;
 
-import backend.mbti.domain.post.LikePost;
-import backend.mbti.domain.post.ViewCountPost;
+import backend.mbti.domain.LikePost;
+import backend.mbti.domain.ViewCountPost;
+import backend.mbti.dto.PostDto;
 import backend.mbti.dto.post.*;
 
-import backend.mbti.domain.member.Member;
-import backend.mbti.domain.post.Post;
+import backend.mbti.domain.Member;
+import backend.mbti.domain.Post;
 import backend.mbti.configuration.exception.AppException;
 import backend.mbti.configuration.exception.ErrorCode;
+import backend.mbti.repository.CommentRepository;
 import backend.mbti.repository.LikePostRepository;
 import backend.mbti.repository.PostRepository;
 import backend.mbti.repository.SignRepository;
@@ -15,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -26,21 +29,25 @@ public class PostServiceImpl implements PostService{
     private final SignRepository signRepository;
     private final PostRepository postRepository;
     private final LikePostRepository likePostRepository;
+    private final CommentRepository commentRepository;
 
     @Override
-    public void createPost(CreatePostRequest createPostRequest, String username) {
+    public void createPost(PostDto.CreateRequest createRequest, String username) {
         Member member = signRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND));
 
-        ViewCountPost viewCountPost = new ViewCountPost(0L);
+        ViewCountPost viewCountPost = new ViewCountPost();
 
         Post post = new Post(
-                createPostRequest.getTitle(),
-                createPostRequest.getOptionA(),
-                createPostRequest.getOptionB(),
+                null,
+                createRequest.getTitle(),
+                createRequest.getOptionA(),
+                createRequest.getOptionB(),
                 member,
                 new Date(),
-                viewCountPost
+                viewCountPost,
+                null,
+                null
         );
         viewCountPost.setPost(post);
 
@@ -48,27 +55,26 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<PostResponse> viewPostList() {
+    public List<PostDto.ListResponse> getListByPost() {
         List<Post> postList = postRepository.findAllByOrderByIdDesc();
 
-
         return postList.stream()
-                .map(post -> new PostResponse(
+                .map(post -> new PostDto.ListResponse(
                         post.getId(),
                         post.getTitle(),
                         post.getOptionA(),
                         post.getOptionB(),
+                        post.getCreatedAt(),
                         post.getViewCountPost().getView(),
-                        likePostRepository.countAllByPost(post)))
+                        commentRepository.countCommentByPost(post)
+                        )
+                )
                 .collect(Collectors.toList());
     }
 
     @Override
-    public PostResponse viewPost(Long postId) {
-        Optional<Post> post = Optional.ofNullable(postRepository.findById(postId).orElseThrow(
-                () -> new AppException(ErrorCode.POST_NOT_FOUND)
-        ));
-
+    public PostResponse getPost(Long postId) {
+        Optional<Post> post = postRepository.findById(postId);
 
         return new PostResponse(
                 post.orElseThrow().getId(),

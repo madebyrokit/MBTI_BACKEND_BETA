@@ -1,13 +1,22 @@
-package backend.mbti.dto.oauth;
+package backend.mbti.dto;
 
 import lombok.Data;
 
 @Data
-public class KakaoProfile {
+public class KakaoDto {
     private long id;
     private String connected_at;
     private Properties properties;
     private KakaoAccount kakao_account;
+    @Data
+    static class KakaoJwt {
+        private String access_token;
+        private String token_type;
+        private String refresh_token;
+        private int expires_in;
+        private String scope;
+        private int refresh_token_expires_in;
+    }
 
     @Data
     public static class Properties {

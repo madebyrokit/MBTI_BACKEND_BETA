@@ -1,6 +1,5 @@
-package backend.mbti.domain.comment;
+package backend.mbti.domain;
 
-import backend.mbti.domain.member.Member;
 import lombok.*;
 
 import javax.persistence.*;
