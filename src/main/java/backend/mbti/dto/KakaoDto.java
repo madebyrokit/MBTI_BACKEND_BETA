@@ -8,6 +8,7 @@ public class KakaoDto {
     private String connected_at;
     private Properties properties;
     private KakaoAccount kakao_account;
+
     @Data
     public static class KakaoJwt {
         private String access_token;

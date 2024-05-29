@@ -2,16 +2,14 @@ package backend.mbti.service;
 
 import backend.mbti.domain.LikeComment;
 import backend.mbti.dto.CommentDto;
-import backend.mbti.dto.PostDto;
 import backend.mbti.repository.CommentRepository;
-import backend.mbti.repository.LikeCommentRepository;
 import backend.mbti.domain.Comment;
 import backend.mbti.domain.Member;
 import backend.mbti.domain.Post;
 import backend.mbti.configuration.exception.AppException;
 import backend.mbti.configuration.exception.ErrorCode;
 import backend.mbti.repository.PostRepository;
-import backend.mbti.repository.SignRepository;
+import backend.mbti.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,15 +20,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
-    private final SignRepository signRepository;
+    private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
-    private final LikeCommentRepository likeCommentRepository;
-
 
     @Override
     public void createComment(CommentDto.CreateRequest createRequest, String username) {
-        Member member = signRepository.findByUsername(username)
+        Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND));
 
         Post post = postRepository.findById(createRequest.getPostId())

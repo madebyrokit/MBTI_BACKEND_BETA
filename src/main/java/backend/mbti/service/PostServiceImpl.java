@@ -10,7 +10,7 @@ import backend.mbti.configuration.exception.ErrorCode;
 import backend.mbti.repository.CommentRepository;
 import backend.mbti.repository.LikePostRepository;
 import backend.mbti.repository.PostRepository;
-import backend.mbti.repository.SignRepository;
+import backend.mbti.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,14 +23,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService{
 
-    private final SignRepository signRepository;
+    private final MemberRepository memberRepository;
     private final PostRepository postRepository;
     private final LikePostRepository likePostRepository;
     private final CommentRepository commentRepository;
 
     @Override
     public void createPost(PostDto.CreateRequest createRequest, String username) {
-        Member member = signRepository.findByUsername(username)
+        Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND));
 
         Post post = new Post(
@@ -104,7 +104,7 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public String likePost(PostDto.LikePostRequest likePostRequest, String username) {
-        Member member = signRepository.findByUsername(username)
+        Member member = memberRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND));
 
         Post post = postRepository.findById(likePostRequest.getPostId())

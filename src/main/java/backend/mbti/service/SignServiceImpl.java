@@ -6,7 +6,7 @@ import backend.mbti.domain.Member;
 import backend.mbti.configuration.exception.AppException;
 import backend.mbti.configuration.exception.ErrorCode;
 import backend.mbti.dto.SignDto;
-import backend.mbti.repository.SignRepository;
+import backend.mbti.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 public class SignServiceImpl implements SignService{
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final SignRepository signRepository;
+    private final MemberRepository memberRepository;
 
     @Value("${file.upload-dir}")
     private String filePath;
@@ -41,12 +41,12 @@ public class SignServiceImpl implements SignService{
         );
         member.setProfileImage(new ProfileImage("default.jpg", member));
 
-        signRepository.save(member);
+        memberRepository.save(member);
     }
 
     @Override
     public String login(SignDto.LoginRequest loginRequest) {
-        Member member = signRepository.findAllByEmail(loginRequest.getEmail())
+        Member member = memberRepository.findAllByEmail(loginRequest.getEmail())
                 .orElseThrow(() ->new AppException(ErrorCode.USERNAME_NOT_FOUND));
 
         if (!bCryptPasswordEncoder.matches(loginRequest.getPassword(), member.getPassword())) {

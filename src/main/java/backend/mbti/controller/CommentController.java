@@ -1,6 +1,5 @@
 package backend.mbti.controller;
 
-
 import backend.mbti.dto.CommentDto;
 import backend.mbti.service.CommentService;
 import backend.mbti.domain.Comment;
