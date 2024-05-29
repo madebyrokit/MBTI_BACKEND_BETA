@@ -21,4 +21,9 @@ public class CommentDto{
         private String content;
         private String option;
     }
+
+    @Data
+    public static class LikeRequest {
+        private Long commentId;
+    }
 }

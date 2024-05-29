@@ -1,10 +1,9 @@
 package backend.mbti.controller;
 
 
+import backend.mbti.dto.CommentDto;
 import backend.mbti.service.CommentService;
 import backend.mbti.domain.Comment;
-import backend.mbti.dto.comment.CreateCommentRequest;
-import backend.mbti.dto.comment.LikeCommentRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +22,8 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping
-    public void createComment(@RequestBody CreateCommentRequest createCommentRequest, Authentication authentication) {
-        commentService.createComment(createCommentRequest, authentication.getName());
+    public void createComment(@RequestBody CommentDto.CreateRequest createRequest, Authentication authentication) {
+        commentService.createComment(createRequest, authentication.getName());
     }
 
     @GetMapping("/{postId}")
@@ -38,8 +37,8 @@ public class CommentController {
     }
 
     @PutMapping
-    public ResponseEntity<?> updateComment(@RequestBody UpdateCommentRequest updateCommentRequest, Authentication authentication) {
-        Boolean comments = commentService.updateComment(updateCommentRequest, authentication.getName());
+    public ResponseEntity<?> updateComment(@RequestBody CommentDto.UpdateRequest updateRequest, Authentication authentication) {
+        Boolean comments = commentService.updateComment(updateRequest, authentication.getName());
         if (comments != null) {
             return ResponseEntity.ok().build();
         } else {
@@ -48,12 +47,12 @@ public class CommentController {
     }
 
     @DeleteMapping
-    public void deleteComment(@RequestBody DeleteCommentRequest deleteCommentRequest, Authentication authentication) {
-        commentService.deleteComment(deleteCommentRequest, authentication.getName());
+    public void deleteComment(@RequestBody CommentDto.DeleteRequest deleteRequest, Authentication authentication) {
+        commentService.deleteComment(deleteRequest, authentication.getName());
     }
 
     @PostMapping("/like")
-    public void toggleLikeComment(LikeCommentRequest likeCommentRequest, Authentication authentication) {
-        commentService.toggleLike(likeCommentRequest.getCommentId(), authentication.getName());
+    public void toggleLikeComment(CommentDto.LikeRequest likeRequest, Authentication authentication) {
+        commentService.toggleLike(likeRequest.getCommentId(), authentication.getName());
     }
 }

@@ -4,7 +4,7 @@ import lombok.*;
 
 public class SignDto {
     @Data
-    private static class LoginRequest {
+    public static class LoginRequest {
         private String email;
         private String password;
     }

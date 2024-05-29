@@ -36,4 +36,12 @@ public class Comment {
 
     @Column
     private Date createdAt;
+
+    public Comment(String content, Post post, Member member, String selectOption, Date createdAt) {
+        this.content = content;
+        this.post = post;
+        this.member = member;
+        this.selectOption = selectOption;
+        this.createdAt = createdAt;
+    }
 }

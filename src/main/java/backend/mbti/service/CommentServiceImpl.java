@@ -1,9 +1,11 @@
 package backend.mbti.service;
 
+import backend.mbti.domain.LikeComment;
+import backend.mbti.dto.CommentDto;
+import backend.mbti.dto.PostDto;
 import backend.mbti.repository.CommentRepository;
 import backend.mbti.repository.LikeCommentRepository;
 import backend.mbti.domain.Comment;
-import backend.mbti.dto.comment.CreateCommentRequest;
 import backend.mbti.domain.Member;
 import backend.mbti.domain.Post;
 import backend.mbti.configuration.exception.AppException;
@@ -27,19 +29,22 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
-    public void createComment(CreateCommentRequest createCommentRequest, String username) {
+    public void createComment(CommentDto.CreateRequest createRequest, String username) {
         Member member = signRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND));
 
-        Post post = postRepository.findById(createCommentRequest.getPostId())
+        Post post = postRepository.findById(createRequest.getPostId())
                 .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND));
 
         Comment comment = new Comment(
-                createCommentRequest.getContent(),
+                createRequest.getContent(),
                 post,
                 member,
-                createCommentRequest.getOption(),
-                new Date());
+                createRequest.getOption(),
+                new Date()
+        );
+
+        LikeComment likeComment = new LikeComment(comment, member);
 
         commentRepository.save(comment);
     }
@@ -53,19 +58,19 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Boolean updateComment(UpdateCommentRequest updateCommentRequest, String username) {
+    public Boolean updateComment(CommentDto.UpdateRequest updateCommentRequest, String username) {
         Comment comment = commentRepository.findById(updateCommentRequest.getPostId())
                 .orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_FOUND));
 
         comment.setContent(updateCommentRequest.getContent());
         comment.setSelectOption(updateCommentRequest.getOption());
 
-        //X
+
         return true;
     }
 
     @Override
-    public void deleteComment(DeleteCommentRequest deleteCommentRequest, String username) {
+    public void deleteComment(CommentDto.DeleteRequest deleteCommentRequest, String username) {
         Comment comment = commentRepository.findById(deleteCommentRequest.getCommentId())
                 .orElseThrow(() -> new AppException(ErrorCode.COMMENT_NOT_FOUND));
 

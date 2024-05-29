@@ -1,7 +1,6 @@
 package backend.mbti.controller;
 
 import backend.mbti.dto.PostDto;
-import backend.mbti.dto.post.*;
 
 import backend.mbti.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +32,8 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public ResponseEntity<PostDto.> viewPost(@PathVariable Long postId) {
-        PostResponse postResponse = postService.getPost(postId);
+    public ResponseEntity<PostDto.Response> viewPost(@PathVariable Long postId) {
+        PostDto.Response postResponse = postService.getPost(postId);
         if (postResponse != null) {
             return ResponseEntity.ok(postResponse);
         } else {
@@ -43,17 +42,17 @@ public class PostController {
     }
 
     @PutMapping
-    public void updatePost(@RequestBody UpdatePostRequest updatePostRequest, Authentication authentication) {
+    public void updatePost(@RequestBody PostDto.UpdateRequest updatePostRequest, Authentication authentication) {
         postService.updatePost(updatePostRequest, authentication.getName());
     }
 
     @DeleteMapping
-    public void deletePost(@RequestBody DeletePostRequest deletePostRequest, Authentication authentication) {
+    public void deletePost(@RequestBody PostDto.DeleteRequest deletePostRequest, Authentication authentication) {
         postService.deletePost(deletePostRequest, authentication.getName());
     }
 
     @PostMapping("/like")
-    public void toggleLike(LikePostRequest likePostRequest, Authentication authentication) {
-        postService.likePost(likePostRequest, authentication.getName());
+    public ResponseEntity<String> toggleLike(@RequestBody PostDto.LikePostRequest likePostRequest, Authentication authentication) {
+        return ResponseEntity.ok().body(postService.likePost(likePostRequest, authentication.getName()));
     }
 }

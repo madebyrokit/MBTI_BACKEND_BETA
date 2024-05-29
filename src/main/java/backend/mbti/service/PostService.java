@@ -10,8 +10,8 @@ import java.util.List;
 public interface PostService {
     void createPost(PostDto.CreateRequest createRequest, String username);
     List<PostDto.ListResponse> getListByPost();
-    PostResponse getPost(Long postId);
-    void updatePost(UpdatePostRequest updatePostRequest, String username);
-    void deletePost(DeletePostRequest deletePostRequest, String username);
-    void likePost(LikePostRequest likePostRequest, String username);
+    PostDto.Response getPost(Long postId);
+    void updatePost(PostDto.UpdateRequest updatePostRequest, String username);
+    void deletePost(PostDto.DeleteRequest deletePostRequest, String username);
+    String likePost(PostDto.LikePostRequest likePostRequest, String username);
 }

@@ -2,7 +2,6 @@ package backend.mbti.service;
 
 import backend.mbti.domain.LikePost;
 import backend.mbti.dto.PostDto;
-import backend.mbti.dto.post.*;
 
 import backend.mbti.domain.Member;
 import backend.mbti.domain.Post;
@@ -34,8 +33,6 @@ public class PostServiceImpl implements PostService{
         Member member = signRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND));
 
-        ViewCountPost viewCountPost = new ViewCountPost();
-
         Post post = new Post(
                 null,
                 createRequest.getTitle(),
@@ -43,11 +40,10 @@ public class PostServiceImpl implements PostService{
                 createRequest.getOptionB(),
                 member,
                 new Date(),
-                viewCountPost,
+                0L,
                 null,
                 null
         );
-        viewCountPost.setPost(post);
 
         postRepository.save(post);
     }
@@ -59,11 +55,12 @@ public class PostServiceImpl implements PostService{
         return postList.stream()
                 .map(post -> new PostDto.ListResponse(
                         post.getId(),
+                        post.getMember().getUsername(),
                         post.getTitle(),
                         post.getOptionA(),
                         post.getOptionB(),
                         post.getCreatedAt(),
-                        post.getViewCountPost().getView(),
+                        post.getView(),
                         commentRepository.countCommentByPost(post)
                         )
                 )
@@ -71,20 +68,22 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public PostResponse getPost(Long postId) {
+    public PostDto.Response getPost(Long postId) {
         Optional<Post> post = postRepository.findById(postId);
 
-        return new PostResponse(
-                post.orElseThrow().getId(),
+        log.info(likePostRepository.countByPostId(postId).toString());
+        return new PostDto.Response(
+                post.get().getId(),
+                post.get().getMember().getUsername(),
                 post.get().getTitle(),
                 post.get().getOptionA(),
                 post.get().getOptionB(),
-                post.get().getViewCountPost().getView(),
-                likePostRepository.countAllByPost(post.get()));
+                post.get().getView(),
+                likePostRepository.countByPostId(postId));
     }
 
     @Override
-    public void updatePost(UpdatePostRequest updatePostRequest, String username) {
+    public void updatePost(PostDto.UpdateRequest updatePostRequest, String username) {
         Post post = postRepository.findById(updatePostRequest.getPostId()).orElseThrow(()->
                 new AppException(ErrorCode.POST_NOT_FOUND)
         );
@@ -96,7 +95,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public void deletePost(DeletePostRequest deletePostRequest, String username) {
+    public void deletePost(PostDto.DeleteRequest deletePostRequest, String username) {
         Post post = postRepository.findById(deletePostRequest.getPostId())
                 .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND));
 
@@ -104,15 +103,23 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public void likePost(LikePostRequest likePostRequest, String username) {
+    public String likePost(PostDto.LikePostRequest likePostRequest, String username) {
         Member member = signRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USERNAME_NOT_FOUND));
 
         Post post = postRepository.findById(likePostRequest.getPostId())
                 .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND));
+        LikePost s = likePostRepository.findByMember(member);
+        if (s == null) {
+            LikePost likePost = new LikePost(post, member);
+            likePostRepository.save(likePost);
+            post.getLikePost().add(likePost);
+            postRepository.save(post);
+            return "SAVE OK";
+        } else {
+            likePostRepository.delete(s);
+            return "DELETE OK";
+        }
 
-        LikePost likePost = new LikePost(post, member);
-
-        likePostRepository.save(likePost);
     }
 }

@@ -5,6 +5,7 @@ import backend.mbti.domain.ProfileImage;
 import backend.mbti.domain.Member;
 import backend.mbti.configuration.exception.AppException;
 import backend.mbti.configuration.exception.ErrorCode;
+import backend.mbti.dto.SignDto;
 import backend.mbti.repository.SignRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,7 @@ public class SignServiceImpl implements SignService{
     private Long expireTimeMs = 1000 * 60 * 60L;
 
     @Override
-    public void signup(SignUpRequest signUpRequest) {
+    public void signup(SignDto.SignUpRequest signUpRequest) {
         String encPwd = bCryptPasswordEncoder.encode(signUpRequest.getPassword());
 
         Member member = new Member(
@@ -44,7 +45,7 @@ public class SignServiceImpl implements SignService{
     }
 
     @Override
-    public String login(LoginRequest loginRequest) {
+    public String login(SignDto.LoginRequest loginRequest) {
         Member member = signRepository.findAllByEmail(loginRequest.getEmail())
                 .orElseThrow(() ->new AppException(ErrorCode.USERNAME_NOT_FOUND));
 

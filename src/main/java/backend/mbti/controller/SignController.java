@@ -1,5 +1,6 @@
 package backend.mbti.controller;
 
+import backend.mbti.dto.SignDto;
 import backend.mbti.service.SignService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,7 @@ public class SignController {
     private final SignService signService;
 
     @PostMapping("/signin")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<String> login(@RequestBody SignDto.LoginRequest loginRequest) {
         String token = signService.login(loginRequest);
 
         HttpHeaders headers = new HttpHeaders();
@@ -28,7 +29,7 @@ public class SignController {
     }
 
     @PostMapping("/signup")
-    public void sign(@RequestBody SignUpRequest signUpRequest) {
+    public void sign(@RequestBody SignDto.SignUpRequest signUpRequest) {
         signService.signup(signUpRequest);
     }
 }
